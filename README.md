@@ -18,3 +18,4 @@ Legend:
 
 Puzzle | Solution(s) | Remarks |
 ---    |---    |----
+[Day 1: Calorie Counting](https://adventofcode.com/2022/day/1) | [Python](python/01.py) | |
