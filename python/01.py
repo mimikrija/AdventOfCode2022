@@ -1,13 +1,15 @@
 
 from santas_little_helpers.helpers import *
 
-data = get_input('inputs/01.txt', True)
+data_sets = get_input('inputs/01.txt', False,'\n\n')
+calories = dict()
+for elf, set in enumerate(data_sets, 1):
+    calories[elf] = sum(int(n) for n in set.split('\n'))
 
-def f(x):
-    return True
+t = max(calories)
+print(calories[t])
 
-# sum by condition
-print(sum(num for num in data if f(num)))
+print(max(calories.values()))
 
-# count satisfying conditions
-print(sum(f(num) for  num in data))
+three = sorted(calories.values(), reverse=True)
+print(sum(three[:3]))
