@@ -11,3 +11,8 @@ party_2 = sum(sorted(calories, reverse=True)[:3])
 
 print_solutions(party_1, party_2)
 
+def test_one():
+    assert party_1 == 72478
+
+def test_two():
+    assert party_2 == 210367
