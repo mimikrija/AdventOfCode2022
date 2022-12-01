@@ -4,10 +4,11 @@
 from santas_little_helpers.helpers import *
 
 data_sets = get_input('inputs/01.txt', False,'\n\n')
-calories = [sum(int(calorie) for calorie in data_set.split('\n')) for data_set in data_sets]
+calories = sorted((sum(int(calorie) for calorie in data_set.split('\n'))
+                                    for data_set in data_sets), reverse=True)[:3]
 
-party_1 = max(calories)
-party_2 = sum(sorted(calories, reverse=True)[:3])
+party_1 = calories[0]
+party_2 = sum(calories)
 
 print_solutions(party_1, party_2)
 
