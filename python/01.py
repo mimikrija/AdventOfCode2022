@@ -1,15 +1,13 @@
+# Day 1: Calorie Counting
+
 
 from santas_little_helpers.helpers import *
 
 data_sets = get_input('inputs/01.txt', False,'\n\n')
-calories = dict()
-for elf, set in enumerate(data_sets, 1):
-    calories[elf] = sum(int(n) for n in set.split('\n'))
+calories = [sum(int(calorie) for calorie in data_set.split('\n')) for data_set in data_sets]
 
-t = max(calories)
-print(calories[t])
+party_1 = max(calories)
+party_2 = sum(sorted(calories, reverse=True)[:3])
 
-print(max(calories.values()))
+print_solutions(party_1, party_2)
 
-three = sorted(calories.values(), reverse=True)
-print(sum(three[:3]))
