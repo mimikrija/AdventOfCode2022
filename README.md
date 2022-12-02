@@ -19,4 +19,4 @@ Legend:
 Puzzle | Solution(s) | Remarks |
 ---    |---    |----
 [Day 1: Calorie Counting](https://adventofcode.com/2022/day/1) | [Python](python/01.py) | |
-[Day 2: Rock Paper Scissors](https://adventofcode.com/2022/day/2) | [Python](python/02.py) | :hammer: as straightforward as this puzzle is I messed up everything I could and I think my solution could be more elegant. Maybe dictionaries are overkill for this and I shouldn't have even converted letters to names, that way score calculation wouldn't depend on the position in the pair? Whoa! I might try that.|
+[Day 2: Rock Paper Scissors](https://adventofcode.com/2022/day/2) | [Python](python/02.py) | :hammer: as straightforward as this puzzle is I messed up everything I could and I think my solution could be more elegant. |
