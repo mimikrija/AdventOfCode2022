@@ -1,39 +1,35 @@
 # Day 2: Rock Paper Scissors
 
-
 from santas_little_helpers.helpers import *
 
-second_wins = ('C X', 'A Y', 'B Z')
+wins = ('C X', 'A Y', 'B Z')
 ties = ('A X', 'B Y', 'C Z')
+losses = ('B X', 'C Y', 'A Z')
+
+RPS = {c: n+1 for n, c in enumerate('XYZ')}
 
 games = get_input('inputs/02.txt')
-
-party_1 = sum(6*(game in second_wins) + 3*(game in ties) +
-                 + ('X' in game) + 2*('Y' in game) + 3*('Z' in game)
-                                                    for game in games)
-
-first_wins = ('B X', 'C Y', 'A Z')
-
-def desired_outcome(game):
-    return sum(3*n*(c in game) for n, c in enumerate(('X', 'Y', 'Z')))
+possible_games = set(games)
 
 
-def part_2(games):
-    result = 0
-    for game in games:
-        outcome_points = desired_outcome(game)
-        if outcome_points == 6:
-            result += 2*('A' in game) + 3*('B' in game) + ('C' in game)
-        if outcome_points == 3:
-            result += ('A' in game) + 2*('B' in game) + 3*('C' in game)
-        if outcome_points == 0:
-            result += 3*('A' in game) + ('B' in game) + 2*('C' in game)
-        result += outcome_points
-    return result
+scores_pt1 = {game: (sum(3*n*(game in outcome) for n, outcome in enumerate((ties, wins), 1)) + RPS[game[2]]) for game in possible_games}
+
+party_1 = sum(scores_pt1[game] for game in games)
+
+outcomes_pt2 = {'X': losses, 'Y': ties, 'Z': wins}
+
+scores_pt2 = dict()
+for game in possible_games:
+    left, right = game.split()
+    outcome = outcomes_pt2[right]
+    for sc, out in enumerate(outcome, 1):
+        if left in out:
+            pt2[game] = sc
+    scores_pt2[game] += (RPS[right]-1)*3 # add game outcome = 6, 3 or 0
 
 
 
-party_2 = part_2(games)
+party_2 = sum(scores_pt2[game] for game in games)
 
 
 print_solutions(party_1, party_2)
