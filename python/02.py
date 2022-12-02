@@ -67,3 +67,11 @@ for first, second in data:
     party_2 += pt2[second] + scores[what_to_get(pt2[second], RPS[first])]
 
 print(party_2)
+
+
+def test_one():
+    assert party_1 == 12794
+
+def test_two():
+    assert party_2 == 14979
+    
