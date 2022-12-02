@@ -3,6 +3,15 @@
 
 from santas_little_helpers.helpers import *
 
+second_wins = ('C X', 'A Y', 'B Z')
+ties = ('A X', 'B Y', 'C Z')
+
+games = get_input('inputs/02.txt')
+
+party_1 = sum(6*(game in second_wins) + 3*(game in ties) +
+                 + ('X' in game) + 2*('Y' in game) + 3*('Z' in game)
+        for game in games)
+
 RPS = {
     'A': 'rock',
     'B': 'paper',
@@ -55,7 +64,6 @@ def what_to_get(outcome, elf):
 
 data = [line.split() for line in get_input('inputs/02.txt')]
 
-party_1 = sum(SHAPE_VALUE[RPS[me]] + outcome(RPS[elf], RPS[me]) for elf, me in data)
 party_2 = sum(DESIRED_OUTCOME[me] + SHAPE_VALUE[what_to_get(DESIRED_OUTCOME[me], RPS[elf])] for elf, me in data)
 
 
