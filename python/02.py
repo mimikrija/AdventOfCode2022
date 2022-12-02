@@ -24,7 +24,7 @@ for game in possible_games:
     outcome = outcomes_pt2[right]
     for sc, out in enumerate(outcome, 1):
         if left in out:
-            pt2[game] = sc
+            scores_pt2[game] = sc
     scores_pt2[game] += (RPS[right]-1)*3 # add game outcome = 6, 3 or 0
 
 
