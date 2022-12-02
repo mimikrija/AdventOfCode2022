@@ -2,37 +2,15 @@
 
 from santas_little_helpers.helpers import *
 
-wins = ('C X', 'A Y', 'B Z')
-ties = ('A X', 'B Y', 'C Z')
-losses = ('B X', 'C Y', 'A Z')
+pt_1_scores = ('B X', 'C Y', 'A Z', 'A X', 'B Y', 'C Z', 'C X', 'A Y', 'B Z')
+pt_2_scores = ('B X', 'C X', 'A X', 'A Y', 'B Y', 'C Y', 'C Z', 'A Z', 'B Z')
 
-RPS = {c: n+1 for n, c in enumerate('XYZ')}
 
 games = get_input('inputs/02.txt')
-possible_games = set(games)
 
 
-scores_pt1 = {game: (sum(3*n*(game in outcome) for n, outcome in enumerate((ties, wins), 1)) + RPS[game[2]]) for game in possible_games}
+party_1, party_2 = (sum(scores.index(game) + 1 for game in games) for scores in (pt_1_scores, pt_2_scores))
 
-party_1 = sum(scores_pt1[game] for game in games)
-
-outcomes_pt2 = {'X': losses, 'Y': ties, 'Z': wins}
-
-scores_pt2 = dict()
-for game in possible_games:
-    left, right = game.split()
-    outcome = outcomes_pt2[right]
-    for sc, out in enumerate(outcome, 1):
-        if left in out:
-            scores_pt2[game] = sc
-    scores_pt2[game] += (RPS[right]-1)*3 # add game outcome = 6, 3 or 0
-
-
-
-party_2 = sum(scores_pt2[game] for game in games)
-
-
-print_solutions(party_1, party_2)
 
 
 def test_one():

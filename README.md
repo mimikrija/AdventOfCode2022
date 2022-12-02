@@ -19,4 +19,4 @@ Legend:
 Puzzle | Solution(s) | Remarks |
 ---    |---    |----
 [Day 1: Calorie Counting](https://adventofcode.com/2022/day/1) | [Python](python/01.py) | |
-[Day 2: Rock Paper Scissors](https://adventofcode.com/2022/day/2) | [Python](python/02.py) | :hammer: as straightforward as this puzzle is I messed up everything I could and I think my solution could be more elegant. |
+[Day 2: Rock Paper Scissors](https://adventofcode.com/2022/day/2) | [Python](python/02.py) | I manually sorted result outcomes and just sum indices of the scores list. It turned out to be the most elegant solution (to me). |
