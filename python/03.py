@@ -30,3 +30,9 @@ for n, first in enumerate(data[::3]):
 #print(item_priority('A'))
 # 3875 incorrect
 print(party_2)
+
+def test_one():
+    assert party_1 == 8243
+
+def test_two():
+    assert party_2 == 2631
