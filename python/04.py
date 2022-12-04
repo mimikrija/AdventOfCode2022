@@ -17,3 +17,10 @@ for sec in data:
         party_2 += 1
 
 print_solutions(party_1, party_2)
+
+
+def test_one():
+    assert party_1 == 515
+
+def test_two():
+    assert party_2 == 883
