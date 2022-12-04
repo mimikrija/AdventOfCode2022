@@ -1,5 +1,8 @@
-from santas_little_helpers.helpers import *
+# Day 4: Camp Cleanup
+
 from re import findall
+
+from santas_little_helpers.helpers import *
 
 data = [tuple(map(int, findall(r'\d+', line))) for line in get_input('inputs/04.txt')]
 
