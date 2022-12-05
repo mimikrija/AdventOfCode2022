@@ -32,3 +32,9 @@ for c, p in crates.items():
     print(c, p.pop())
 
 # PTWLTDSJV
+
+def test_one():
+    assert party_1 == 'PTWLTDSJV'
+
+def test_two():
+    assert party_2 == 'WZMFVGGZP'
