@@ -21,3 +21,8 @@ for n, bla in enumerate(get_fourteen(data)):
     if not any(c == f for c, f in permutations(bla, 2)):
         print(n+14)
         break
+def test_one():
+    assert party_1 == 1093
+
+def test_two():
+    assert party_2 == 3534
