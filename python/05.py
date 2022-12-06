@@ -6,12 +6,12 @@ from re import findall
 
 from santas_little_helpers.helpers import *
 
-data = get_input('inputs/05.txt')
-operations = [tuple(map(int, findall(r'\d+', line))) for line in data[10:]]
+data = get_input('inputs/05.txt', False, '\n\n')
+operations = [tuple(map(int, findall(r'\d+', line))) for line in data[1].splitlines()]
 
 # parse stacks
 stacks = defaultdict(list)
-for line in data[7::-1]:
+for line in data[0].splitlines()[-1::-1]:
     for num, crate in enumerate(line[1::4], 1):
         if crate != ' ':
             stacks[num].append(crate)
