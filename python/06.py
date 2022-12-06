@@ -1,14 +1,12 @@
 # Day 6: Tuning Trouble
 
-from itertools import combinations
-
 from santas_little_helpers.helpers import *
 
-
 def find_marker(in_string, n):
-    for pos, bla in enumerate(zip(*(in_string[n:] for n in range(n)))):
-        if not any(first == second for first, second in combinations(bla, 2)):
-            return pos+n
+    for pos in range(len(in_string)):
+        if len(set(in_string[pos:pos+n])) == n:
+            return pos + n
+
 
 
 data = get_input('inputs/06.txt')[0]

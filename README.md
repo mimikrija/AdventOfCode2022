@@ -23,4 +23,4 @@ Puzzle | Solution(s) | Remarks |
 [Day 3: Rucksack Reorganization](https://adventofcode.com/2022/day/3) | [Python](python/03.py) | Sets for the win :heart: |
 [Day 4: Camp Cleanup](https://adventofcode.com/2022/day/4) | [Python](python/04.py) | First solution with sets but then opted for working on range limits, similar to very simplified [2021 Day 22](https://adventofcode.com/2021/day/22) |
 [Day 5: Supply Stacks](https://adventofcode.com/2022/day/5) | [Python](python/05.py) | Stacks! In my first implementation I didn't bother parsing the first part of input, I just manually typed it - it was faster! |
-[Day 6: Tuning Trouble](https://adventofcode.com/2022/day/6) | [Python](python/06.py) | Strings and zips (and combinations).
+[Day 6: Tuning Trouble](https://adventofcode.com/2022/day/6) | [Python](python/06.py) | ~~Strings and zips (and combinations).~~ SETS FOR THE WIN again!!
