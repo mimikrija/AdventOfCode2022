@@ -1,28 +1,27 @@
+# Day 6: Tuning Trouble
+
+from itertools import combinations
+
 from santas_little_helpers.helpers import *
 
+
+def find_marker(in_string, n):
+    for pos, bla in enumerate(zip(*(in_string[n:] for n in range(n)))):
+        if not any(first == second for first, second in combinations(bla, 2)):
+            return pos+n
+
+
 data = get_input('inputs/06.txt')[0]
-#data = get_input('inputs/06e.txt')[0]
-from itertools import permutations
+
+party_1, party_2 =(find_marker(data, n) for n in (4, 14))
+
+print_solutions(party_1, party_2)
 
 
-for n, (on, tw, tr, fo) in enumerate(zip(data, data[1:], data[2:], data[3:])):
-    if on != tw and on!= tr and on!= fo and tw != fo and tw!=tr and tr != fo:
-        print(on, tw, tr, fo)
-        print (n+4)
-        break
 
-# not 16
-
-def get_fourteen(in_str):
-    lists = [in_str[n:] for n in range(14)]
-    return zip(*lists)
-
-for n, bla in enumerate(get_fourteen(data)):
-    if not any(c == f for c, f in permutations(bla, 2)):
-        print(n+14)
-        break
 def test_one():
     assert party_1 == 1093
 
 def test_two():
     assert party_2 == 3534
+
