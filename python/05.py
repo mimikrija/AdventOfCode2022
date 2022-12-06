@@ -19,11 +19,9 @@ for line in data[7::-1]:
 
 def solve(in_stacks, operations, part2=False):
     stacks = deepcopy(in_stacks)
+    func = reversed if part2 else list
     for qt, origin, destination in operations:
-        if not part2:
-            stacks[destination] += [stacks[origin].pop() for _ in range(qt)]
-        else:
-            stacks[destination] += reversed([stacks[origin].pop() for _ in range(qt)])
+        stacks[destination] += func([stacks[origin].pop() for _ in range(qt)])
     return ''.join(stack.pop() for stack in stacks.values())
 
 
