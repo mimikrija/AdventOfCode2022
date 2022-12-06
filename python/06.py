@@ -2,6 +2,7 @@
 
 from santas_little_helpers.helpers import *
 
+
 def find_marker(in_string, n):
     for pos in range(len(in_string)):
         if len(set(in_string[pos:pos+n])) == n:
