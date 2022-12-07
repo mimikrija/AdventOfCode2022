@@ -57,3 +57,10 @@ for size in sorted(subfolder_sizes.values()):
         break
 
 print(party_2)
+
+
+def test_one():
+    assert party_1 == 1886043
+
+def test_two():
+    assert party_2 == 3842121
