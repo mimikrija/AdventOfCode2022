@@ -1,62 +1,68 @@
-from collections import defaultdict, deque
+# Day 7: No Space Left On Device
+
+from collections import defaultdict
 
 from santas_little_helpers.helpers import *
 
-data = get_input('inputs/07.txt')
-#data = get_input('inputs/07e.txt')
 
-current_dir = []
-filesystem = dict()
-for line in data:
-    cmd = line.split()
-    if '$' in line:
-        size = 0
-        if cmd[1] == 'cd':
-            if cmd[2] != '..':
-                current_dir.append(cmd[2])
-            else:
+def parse_filesystem(data):
+    current_dir = []
+    filesystem = dict()
+
+    for line in data:
+        if '$ ls' in line:
+            continue
+
+        if '$ cd' in line:
+            if (arg:=line.split()[-1]) == '..':
                 current_dir.pop()
-        else: # list files
+            else:
+                current_dir.append(arg)
             folder_name = '/'.join(c for c in current_dir)[1:]
-    else: # output
-        try:
-            size, filename = int(cmd[0]), cmd[1]
-            filesystem[folder_name + '/' + filename] = size
-        except:
-            pass
 
-tot = 0
-subfolders = set('/')
-for name, size in sorted(filesystem.items()):
-    test = name[1:].split('/')[:-1]
-    subfolders |= {'/'+'/'.join(c for c in test[:n]) for n in range(len(test), 0, -1)}
-    tot += size
+        else: # output
+            first, name = line.split()
+            if first != 'dir': # just add file paths, ignore dirs
+                filesystem[f'{folder_name}/{name}'] = int(first)
+
+    return filesystem
 
 
-subfolder_sizes = defaultdict(int)
+def get_subfolder_sizes(filesystem):
+    subfolders = set('/') # add root
 
-for subfolder in subfolders:
-    for name, size in filesystem.items():
-        if subfolder == name[:len(subfolder)]:
-            subfolder_sizes[subfolder] += size
+    # get unique subfolder paths
+    for name in filesystem.keys():
+        test = name[1:].split('/')[:-1]
+        subfolders |= {'/'+'/'.join(c for c in test[:n]) for n in range(len(test), 0, -1)}
 
-party_1 = 0
-for size in subfolder_sizes.values():
-    if size <= 100000:
-        party_1 += size
+    # generate dict of all subfolder sizes
+    subfolder_sizes = defaultdict(int)
+    for subfolder in subfolders:
+        for name, size in filesystem.items():
+            if subfolder == name[:len(subfolder)]:
+                subfolder_sizes[subfolder] += size
 
-print(party_1)
+    return subfolder_sizes
 
 
-req_size = 30000000
-must_delete = 30000000 - (70000000-tot)
 
-for size in sorted(subfolder_sizes.values()):
-    if size >= must_delete:
-        party_2 = size
-        break
+data = get_input('inputs/07.txt')
 
-print(party_2)
+filesystem = parse_filesystem(data)
+subfolder_sizes = get_subfolder_sizes(filesystem)
+
+party_1 = sum(size for size in subfolder_sizes.values() if size <= 100000)
+
+
+unused_space = 70000000 - subfolder_sizes['/']
+space_needed = 30000000 - unused_space
+
+party_2 = min(filter(lambda size: size >= space_needed, subfolder_sizes.values()))
+
+
+print_solutions(party_1, party_2)
+
 
 
 def test_one():
