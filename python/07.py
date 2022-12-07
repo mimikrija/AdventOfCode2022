@@ -5,9 +5,13 @@ from collections import defaultdict
 from santas_little_helpers.helpers import *
 
 
+def generate_subfolder_paths(current_level):
+    return {'/'.join(c for c in current_level[:n]) for n in range(len(current_level), 0, -1)}
+
+
 def parse_filesystem(data):
-    current_dir = []
-    filesystem = dict()
+    current_level = []
+    dir_sizes = defaultdict(int)
 
     for line in data:
         if '$ ls' in line:
@@ -15,50 +19,33 @@ def parse_filesystem(data):
 
         if '$ cd' in line:
             if (arg:=line.split()[-1]) == '..':
-                current_dir.pop()
+                current_level.pop()
             else:
-                current_dir.append(arg)
-            folder_name = '/'.join(c for c in current_dir)[1:]
+                current_level.append(arg)
 
         else: # output
-            first, name = line.split()
-            if first != 'dir': # just add file paths, ignore dirs
-                filesystem[f'{folder_name}/{name}'] = int(first)
+            if (size:=line.split()[0]) != 'dir':
+                # add this file size to all possible subfolders it belongs to
+                for subdir in generate_subfolder_paths(current_level):
+                    dir_sizes[subdir] += int(size)
 
-    return filesystem
+    return dir_sizes
 
-
-def get_subfolder_sizes(filesystem):
-    subfolders = set('/') # add root
-
-    # get unique subfolder paths
-    for name in filesystem.keys():
-        test = name[1:].split('/')[:-1]
-        subfolders |= {'/'+'/'.join(c for c in test[:n]) for n in range(len(test), 0, -1)}
-
-    # generate dict of all subfolder sizes
-    subfolder_sizes = defaultdict(int)
-    for subfolder in subfolders:
-        for name, size in filesystem.items():
-            if subfolder == name[:len(subfolder)]:
-                subfolder_sizes[subfolder] += size
-
-    return subfolder_sizes
 
 
 
 data = get_input('inputs/07.txt')
 
-filesystem = parse_filesystem(data)
-subfolder_sizes = get_subfolder_sizes(filesystem)
-
-party_1 = sum(size for size in subfolder_sizes.values() if size <= 100000)
+sizes = parse_filesystem(data)
 
 
-unused_space = 70000000 - subfolder_sizes['/']
+party_1 = sum(size for size in sizes.values() if size <= 100000)
+
+
+unused_space = 70000000 - sizes['/']
 space_needed = 30000000 - unused_space
 
-party_2 = min(filter(lambda size: size >= space_needed, subfolder_sizes.values()))
+party_2 = min(filter(lambda size: size >= space_needed, sizes.values()))
 
 
 print_solutions(party_1, party_2)
