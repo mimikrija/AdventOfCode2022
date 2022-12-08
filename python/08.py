@@ -17,7 +17,7 @@ def directions(tree):
     right = [(x, yt) for x in range(xt+1, MAX_X)]
     up = [(xt, y) for y in reversed(range(0, yt))]
     down = [(xt, y) for y in range(yt+1, MAX_Y)]
-    return (left, right, up, down)
+    return left, right, up, down
 
 
 def is_visible(tree, grid):
