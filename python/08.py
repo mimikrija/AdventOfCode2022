@@ -1,7 +1,6 @@
 # Day 8: Treetop Tree House
 
-from functools import reduce
-from operator import mul
+from math import prod
 
 from santas_little_helpers.helpers import *
 
@@ -27,7 +26,7 @@ def is_visible(location, grid):
 
 def scenic_score(location, grid):
     height = grid[location]
-    return (reduce(mul, (next((n for n, pair in enumerate(left, 1) if grid[pair] >= height), default) for left, default in directions(location))))
+    return prod(next((n for n, pair in enumerate(left, 1) if grid[pair] >= height), default) for left, default in directions(location))
 
 
 
