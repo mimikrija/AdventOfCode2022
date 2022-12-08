@@ -1,5 +1,8 @@
 # Day 8: Treetop Tree House
 
+from functools import reduce
+from operator import mul
+
 from santas_little_helpers.helpers import *
 
 data = get_input('inputs/08.txt')
@@ -12,9 +15,9 @@ def is_visible(location, grid):
     xt, yt = location
     height = grid[location]
 
-    left = ((x, yt) for x in range(0, xt))
+    left = ((x, yt) for x in reversed(range(0, xt)))
     right = ((x, yt) for x in range(xt+1, MAX_X))
-    up = ((xt, y) for y in range(0, yt))
+    up = ((xt, y) for y in reversed(range(0, yt)))
     down = ((xt, y) for y in range(yt+1, MAX_Y))
 
     return any((all(grid[pair] < height for pair in side)) for side in (left, right, up, down))
@@ -23,10 +26,13 @@ def scenic_score(location, grid):
     xt, yt = location
     height = grid[location]
 
-    return next((n for n, x in enumerate(range(xt-1, -1, -1), 1) if grid[(x, yt)] >= height), xt) * \
-        next((n for n, x in enumerate(range(xt+1, MAX_X),1) if grid[(x, yt)] >= height), MAX_X-1-xt) * \
-        next((n for n, y in enumerate(range(yt-1, -1, -1),1) if grid[(xt, y)] >= height), yt) * \
-        next((n for n, y in enumerate(range(yt+1, MAX_Y),1) if grid[(xt, y)] >= height), MAX_Y-1-yt)
+    left = (((x, yt) for x in reversed(range(0, xt))), xt)
+    right = (((x, yt) for x in range(xt+1, MAX_X)), MAX_X -1 - xt)
+    up = (((xt, y) for y in reversed(range(0, yt))), yt)
+    down = (((xt, y) for y in range(yt+1, MAX_Y)), MAX_Y-1-yt)
+
+    return (reduce(mul, (next((n for n, pair in enumerate(left, 1) if grid[pair] >= height), default) for left, default in (left, right, up, down))))
+
 
 
 
