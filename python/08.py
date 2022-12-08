@@ -12,9 +12,12 @@ def is_visible(location, grid):
     xt, yt = location
     height = grid[location]
 
-    return any((all(grid[(x, yt)] < height for x in range(0, xt)), all(grid[(x, yt)] < height for x in range(xt+1, MAX_X)), \
-            all(grid[(xt, y)] < height for y in range(0, yt)), all(grid[(xt, y)] < height for y in range(yt+1, MAX_X))))
+    left = ((x, yt) for x in range(0, xt))
+    right = ((x, yt) for x in range(xt+1, MAX_X))
+    up = ((xt, y) for y in range(0, yt))
+    down = ((xt, y) for y in range(yt+1, MAX_Y))
 
+    return any((all(grid[pair] < height for pair in side)) for side in (left, right, up, down))
 
 def scenic_score(location, grid):
     xt, yt = location
