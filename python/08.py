@@ -81,3 +81,9 @@ party_1 = len(visibles)
 party_2 = max(scenic_score(tree, TREE_HEIGHTS) for tree in TREE_HEIGHTS.keys())
 
 print_solutions(party_1, party_2)
+
+def test_one():
+    assert party_1 == 1801
+
+def test_two():
+    assert party_2 == 209880
