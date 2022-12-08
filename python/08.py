@@ -11,27 +11,30 @@ MAX_Y = len(data)
 
 
 def directions(tree):
-    """returns coordinates to check in a given direction + default solution if all trees are lower than the reference tree for pt2 """
+    """returns coordinates to check in a given direction from reference `tree` location """
     xt, yt = tree
-    left = (((x, yt) for x in reversed(range(0, xt))), xt)
-    right = (((x, yt) for x in range(xt+1, MAX_X)), MAX_X-1-xt)
-    up = (((xt, y) for y in reversed(range(0, yt))), yt)
-    down = (((xt, y) for y in range(yt+1, MAX_Y)), MAX_Y-1-yt)
+    left = [(x, yt) for x in reversed(range(0, xt))]
+    right = [(x, yt) for x in range(xt+1, MAX_X)]
+    up = [(xt, y) for y in reversed(range(0, yt))]
+    down = [(xt, y) for y in range(yt+1, MAX_Y)]
     return (left, right, up, down)
 
 
 def is_visible(location, grid):
     height = grid[location]
-    return any((all(grid[pair] < height for pair in side)) for side, _ in directions(location))
+    return any((all(grid[pair] < height for pair in side)) for side in directions(location))
 
 def scenic_score(location, grid):
     height = grid[location]
-    return prod(next((n for n, pair in enumerate(left, 1) if grid[pair] >= height), default) for left, default in directions(location))
+    return prod(next((n for n, pair in enumerate(side, 1) if grid[pair] >= height), len(side)) for side in directions(location))
 
 
+def solve(grid, function1, function2):
+    return function1(function2(tree, grid) for tree in grid)
 
 
-party_1, party_2 = (what(which(tree, TREE_HEIGHTS) for tree in TREE_HEIGHTS.keys()) for what, which in ((sum, is_visible), (max, scenic_score)))
+party_1 = solve(TREE_HEIGHTS, sum, is_visible)
+party_2 = solve(TREE_HEIGHTS, max, scenic_score)
 
 
 print_solutions(party_1, party_2)
