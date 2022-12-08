@@ -22,11 +22,11 @@ def directions(tree):
 
 def is_visible(tree, grid):
     height = grid[tree]
-    return any((all(grid[pair] < height for pair in side)) for side in directions(tree))
+    return any((all(grid[other_tree] < height for other_tree in side)) for side in directions(tree))
 
 def scenic_score(tree, grid):
     height = grid[tree]
-    return prod(next((n for n, pair in enumerate(side, 1) if grid[pair] >= height), len(side)) for side in directions(tree))
+    return prod(next((n for n, other_tree in enumerate(side, 1) if grid[other_tree] >= height), len(side)) for side in directions(tree))
 
 
 def solve(grid, function1, function2):
