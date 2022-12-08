@@ -4,15 +4,14 @@ from santas_little_helpers.helpers import *
 data = get_input('inputs/08.txt')
 #data = get_input('inputs/08e.txt')
 
-TREE_HEIGHTS = {(y, x): int(num) for x, row in enumerate(data) for y, num in enumerate(row)}
+TREE_HEIGHTS = {(x, y): int(num) for y, row in enumerate(data) for x, num in enumerate(row)}
 MAX_X = len(data[0])
-MAX_Y = len(data) 
+MAX_Y = len(data)
 
 def is_visible(location, grid):
     xt, yt = location
     height = grid[location]
-    if xt == 0 or xt == MAX_X - 1 or yt == 0 or yt == MAX_Y - 1:
-        return True
+
     if all(grid[(x, yt)] < height for x in range(0, xt)):
         return True
     if all(grid[(x, yt)] < height for x in range(xt+1, MAX_X)):
@@ -21,6 +20,7 @@ def is_visible(location, grid):
         return True
     if all(grid[(xt, y)] < height for y in range(yt+1, MAX_X)):
         return True
+
     return False
 
 
@@ -68,13 +68,8 @@ def scenic_score(location, grid):
 
 
 
-party_1 = 0
-visibles = set()
-for loc, height in TREE_HEIGHTS.items():
+party_1 = sum(is_visible(tree, TREE_HEIGHTS) for tree in TREE_HEIGHTS.keys())
 
-    if is_visible(loc, TREE_HEIGHTS):
-        visibles.add(loc)
-party_1 = len(visibles)
 
 
 
