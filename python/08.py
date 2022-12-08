@@ -20,13 +20,13 @@ def directions(tree):
     return (left, right, up, down)
 
 
-def is_visible(location, grid):
-    height = grid[location]
-    return any((all(grid[pair] < height for pair in side)) for side in directions(location))
+def is_visible(tree, grid):
+    height = grid[tree]
+    return any((all(grid[pair] < height for pair in side)) for side in directions(tree))
 
-def scenic_score(location, grid):
-    height = grid[location]
-    return prod(next((n for n, pair in enumerate(side, 1) if grid[pair] >= height), len(side)) for side in directions(location))
+def scenic_score(tree, grid):
+    height = grid[tree]
+    return prod(next((n for n, pair in enumerate(side, 1) if grid[pair] >= height), len(side)) for side in directions(tree))
 
 
 def solve(grid, function1, function2):
