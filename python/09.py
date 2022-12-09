@@ -9,26 +9,19 @@ MOVE = {
     'U': 0-1j,
     }
 
-def get_nine(position):
-    "return 9 neighbors of `position`"
-    x = position.real
-    y = position.imag
-    return {complex(xn, yn) for xn, yn in ((x + dx, y + dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1))}
-
-def is_touching(head, tail):
-    return tail in get_nine(head)
 
 def unit(num):
-    get_unit = lambda x: x/abs(x) if x != 0 else x
-    dx = get_unit(num.real)
-    dy = get_unit(num.imag)
+    sign = lambda x: x/abs(x) if x != 0 else x
+    dx = sign(num.real)
+    dy = sign(num.imag)
     return complex(dx, dy)
 
 
 def move_tail(new_head, old_tail):
-    if is_touching(new_head, old_tail):
+    distance = new_head - old_tail
+    if abs(distance) < 2:
         return old_tail
-    return old_tail + unit(new_head - old_tail)
+    return old_tail + unit(distance)
 
 
 def move_the_rope(instructions, rope_length):
