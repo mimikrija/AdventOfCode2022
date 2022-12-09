@@ -17,25 +17,20 @@ def unit(num):
     return complex(dx, dy)
 
 
-def move_tail(new_head, old_tail):
-    distance = new_head - old_tail
-    if abs(distance) < 2:
-        return old_tail
-    return old_tail + unit(distance)
-
-
 def move_the_rope(instructions, rope_length):
-    rope = rope_length*[0+0j]
+    rope = [0+0j for _ in range(rope_length)]
     tail_positions = {rope[-1]}
 
     for direction, qt in instructions:
-        for _ in range(1, qt+1):
+        for _ in range(qt):
             rope[0] += MOVE[direction] # update head poisition
             for pos in range(1, rope_length):
                 # all knots need to follow the head
-                rope[pos] = move_tail(rope[pos-1], rope[pos])
+                if abs(diff := rope[pos-1] - rope[pos]) < 2:
+                    continue
+                rope[pos] += unit(diff)
             tail_positions.add(rope[rope_length-1])
-    
+
     return len(tail_positions)
 
 
