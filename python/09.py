@@ -29,7 +29,7 @@ def move_the_rope(instructions, rope_length):
                 if abs(diff := rope[pos-1] - rope[pos]) < 2:
                     continue
                 rope[pos] += unit(diff)
-            tail_positions.add(rope[rope_length-1])
+            tail_positions.add(rope[-1])
 
     return len(tail_positions)
 
