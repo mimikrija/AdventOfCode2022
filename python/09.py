@@ -5,7 +5,6 @@ from math import sqrt
 
 
 data = get_input('inputs/09.txt')
-data = get_input('inputs/09e.txt')
 
 movements = [(line.split()[0], int(line.split()[1])) for line in data]
 
@@ -27,7 +26,6 @@ def is_touching(head, tail):
         return True
     return False
 
-mag = lambda x: sqrt(x.real**2+x.imag**2)
 
 def sign(num):
     x = num.real
@@ -69,13 +67,13 @@ for direction, qt in movements:
         tail = move_tail(head, tail)
         tail_positions.add(tail)
 
-print(len(tail_positions))
+party_1 = len(tail_positions)
 
 
 head = 0+0j
 tail = 0+0j
 rope = 10*[0+0j]
-print(rope)
+
 tail_positions = {tail}
 for direction, qt in movements:
     for step in range(1, qt+1):
@@ -85,4 +83,13 @@ for direction, qt in movements:
             rope[pos] = move_tail(rope[pos-1], rope[pos])
         tail_positions.add(rope[9])
 
-print(len(tail_positions))
+party_2 = len(tail_positions)
+
+print_solutions(party_1, party_2)
+
+
+def test_one():
+    assert party_1 == 5695
+
+def test_two():
+    assert party_2 == 2434
