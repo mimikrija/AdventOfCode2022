@@ -1,50 +1,38 @@
 from santas_little_helpers.helpers import *
-from collections import defaultdict
 
 data = get_input('inputs/10.txt')
-#data = get_input('inputs/10e.txt')
 
 
+def cycles(instructions):
+    x = 1
+    sprite_positions = []
+    for line in instructions:
+        for _ in range(len(instruction:=line.split())):
+            sprite_positions.append(x)
+        try:
+            x += int(instruction[1])
+        except:
+            pass
+    return sprite_positions
 
-cycle = 0
-x=1
-xses=[]
-screenx = []
-crt = defaultdict(str)
-for line in data:
-    ins = line.split()
-    if len (ins) == 2:
-        for _ in range(2):
-            cycle += 1
-        
-            if cycle in range(20, 221, 40):
-                print(x, x*cycle, line, cycle)
-                xses.append(x*cycle)
-            if cycle == 220:
-                print (x, x*cycle, line, cycle)
-            screenx.append(x)
-        x += int(ins[1])
-    else:
-        cycle += 1
-        if cycle in range(20, 221, 40):
-                xses.append(x*cycle)
-        screenx.append(x)
+def print_screen(sprite_positions):
+    total_rows = len(sprite_positions)//40
+    pixel = lambda x, pos: '#' if x-1 <= pos <= x+1 else ' '
+    screen = [''.join(pixel(c, pos)
+            for pos, c in enumerate(sprite_positions[row*40:(row+1)*40]))
+            for row in range(total_rows)]
+    for row in screen:
+        print(row)
+    return screen
 
-print(cycle)
-print(len(screenx))
-print(sum(xses))
-party_1 =sum(xses)
+
+sprite_positions = cycles(data)
+party_1 = sum((n*40 + 20)*x for n, x in enumerate(sprite_positions[19::40]))
 
 print_solutions(party_1)
 
-#print(screenx)
-for pos, x in enumerate(screenx):
-    if pos % 40 == 0:
-        print('')
-    if x-1 <= (pos)%40 <= x+1:
-        print('#', end='')
-    else:
-        print(' ', end='')
+party_2 = print_screen(sprite_positions)
+
 
 def test_one():
     assert party_1 == 13860
