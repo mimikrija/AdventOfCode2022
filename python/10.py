@@ -27,13 +27,15 @@ for line in data:
     else:
         cycle += 1
         if cycle in range(20, 221, 40):
-                print(x, x*cycle, line, cycle)
                 xses.append(x*cycle)
         screenx.append(x)
 
 print(cycle)
 print(len(screenx))
 print(sum(xses))
+party_1 =sum(xses)
+
+print_solutions(party_1)
 
 #print(screenx)
 for pos, x in enumerate(screenx):
@@ -43,3 +45,6 @@ for pos, x in enumerate(screenx):
         print('#', end='')
     else:
         print(' ', end='')
+
+def test_one():
+    assert party_1 == 13860
