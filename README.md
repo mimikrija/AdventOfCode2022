@@ -27,3 +27,4 @@ Puzzle | Solution(s) | Remarks |
 [Day 7: No Space Left On Device](https://adventofcode.com/2022/day/7) | [Python](python/07.py) | Another successful non-tree implementation for an obviously tree-like problem. I guess I will never learn trees.
 [Day 8: Treetop Tree House](https://adventofcode.com/2022/day/8) | [Python](python/08.py) | Grids with conditions, satisfying puzzle.
 [Day 9: Rope Bridge](https://adventofcode.com/2022/day/9) | [Python](python/09.py) | I really liked this one! Same implementation for both parts, depending on the rope length. Instructions are over engineered, there are actually only two cases (which ~~I feel could be~~ can be reduced to a single case).
+[Day 10: Cathode-Ray Tube](https://adventofcode.com/2022/day/10) | [Python](python/10.py) | Straightforward puzzle with pixel printing.

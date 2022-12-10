@@ -1,3 +1,5 @@
+# Day 10: Cathode-Ray Tube
+
 from santas_little_helpers.helpers import *
 
 data = get_input('inputs/10.txt')
