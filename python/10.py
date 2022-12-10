@@ -36,3 +36,11 @@ party_2 = print_screen(sprite_positions)
 
 def test_one():
     assert party_1 == 13860
+
+def test_two():
+    assert party_2[0] == '###  #### #  # ####  ##    ##  ##  ###  '
+    assert party_2[1] == '#  #    # #  # #    #  #    # #  # #  # '
+    assert party_2[2] == '#  #   #  #### ###  #       # #    ###  '
+    assert party_2[3] == '###   #   #  # #    # ##    # #    #  # '
+    assert party_2[4] == '# #  #    #  # #    #  # #  # #  # #  # '
+    assert party_2[5] == '#  # #### #  # #     ###  ##   ##  ###  '
