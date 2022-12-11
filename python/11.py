@@ -5,7 +5,7 @@ from math import prod
 from primefac import primefac
 
 data = get_input('inputs/11.txt', False, '\n\n')
-data = get_input('inputs/11e.txt', False, '\n\n')
+#data = get_input('inputs/11e.txt', False, '\n\n')
 
 
 monkeys = []
@@ -38,27 +38,33 @@ def round(monkeys):
             #print(f'monkey {num} inspects item of worry level of {old}')
             new = eval(monkey[1])
 
-            new //= 3
+            new %= divisor
             if new%monkey[2]==0:
                 monkeys[monkey[3]][0].append(new)
             else:
                 monkeys[monkey[4]][0].append(new)
         
 
+divisor = 1
+for monkey in monkeys:
+    divisor *= monkey[2]
 
+print(divisor)
 
-
-for rou in range(20):
+for rou in range(10000):
     round(monkeys)
 
 
 top_inspectors = sorted((monkey[5] for monkey in monkeys), reverse=True)[:2]
 
 party_1 = top_inspectors[0]*top_inspectors[1]
+print_solutions(party_1)
 
 def test_one():
     assert party_1 == 54036
 
+def test_two():
+    assert party_2 == 13237873355
 
 
 
