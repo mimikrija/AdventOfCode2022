@@ -36,10 +36,10 @@ def traverse_floor(cave_floor, cave_heights, start, end, min_length=None):
     came_from = {start: None}
     while not frontier.empty():
         _, current = frontier.get()
+
         if current == end:
             return get_path_length(came_from, start, end)
-        if get_path_length(came_from, start, current) > min_length:
-            return
+
 
         neighbors = get_neighbors(current, cave_floor, cave_heights)
 
@@ -78,10 +78,10 @@ for row, line in enumerate(lines):
         else:
             cave_heights[position] = ord(height)
 
-print(START, END)
-all_cisit = []
-current_min = len(cave_heights)
+party_1 = traverse_floor(cave_heights.keys(), cave_heights, START, END)
 
+
+current_min = len(cave_heights)
 for pos, heig in cave_heights.items():
     if heig == ord('a'):
         #print(pos)
@@ -89,11 +89,13 @@ for pos, heig in cave_heights.items():
         if bla is not None:
             current_min = new_min if (new_min:=bla) < current_min else current_min
 
-print(current_min)
+party_2 = current_min
+
+print_solutions(party_1, party_2)
 
 
+def test_one():
+    assert party_1 == 383
 
-#visited = traverse_floor(cave_floor, cave_heights, START, END)
-
-#print(len(visited)) # not 509, 512, 589 not 443
-
+def test_two():
+    assert party_2 == 377
