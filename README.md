@@ -28,3 +28,4 @@ Puzzle | Solution(s) | Remarks |
 [Day 8: Treetop Tree House](https://adventofcode.com/2022/day/8) | [Python](python/08.py) | Grids with conditions, satisfying puzzle.
 [Day 9: Rope Bridge](https://adventofcode.com/2022/day/9) | [Python](python/09.py) | I really liked this one! Same implementation for both parts, depending on the rope length. Instructions are over engineered, there are actually only two cases (which ~~I feel could be~~ can be reduced to a single case).
 [Day 10: Cathode-Ray Tube](https://adventofcode.com/2022/day/10) | [Python](python/10.py) | Straightforward puzzle with pixel printing.
+[Day 14: Regolith Reservoir](https://adventofcode.com/2022/day/14) | [Python](python/14.py) | Pretty slow for part 2, need to think about it... :hourglass:

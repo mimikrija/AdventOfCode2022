@@ -1,8 +1,6 @@
+# Day 14: Regolith Reservoir
 
 from santas_little_helpers.helpers import *
-
-data = get_input('inputs/14.txt')
-
 
 
 def generate_cave(data):
@@ -51,6 +49,8 @@ def solve(data, is_part_2=False):
             return len(sand)
 
 
+
+data = get_input('inputs/14.txt')
 
 party_1, party_2 = (solve(data, is_part_2) for is_part_2 in (False, True))
 
