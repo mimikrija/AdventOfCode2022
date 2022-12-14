@@ -3,7 +3,6 @@ from santas_little_helpers.helpers import *
 
 data = get_input('inputs/14.txt')
 
-sign = lambda x: 1 if x >= 0 else -1
 
 def generate_cave(data):
     rocks = set()
