@@ -4,6 +4,7 @@ from santas_little_helpers.helpers import *
 data = get_input('inputs/14.txt')
 
 
+
 def generate_cave(data):
     rocks = set()
     for line in data:
@@ -24,43 +25,39 @@ def possible_directions(location):
         yield location + delta
 
 
-def one_sand(rocks, sand, bottom_line, is_part_2=False, start=500+0j):
+def one_sand(rocks, sand, bottom_line, start=500+0j, is_part_2=False):
     current = start
     while True:
         candidate = next((pos for pos in possible_directions(current) if pos not in sand and pos not in rocks), None)
         if not candidate:
             return current # the particle stopped
         current = candidate
-        if is_part_2 and current.imag == bottom_line.imag-1:
-             return current # bottom reached, add to sand
-        if current.imag > bottom_line.imag:
+        if is_part_2 and current.imag == bottom_line - 1:
+            return current # the particle stoppped at the bottom line
+
+        if current.imag > bottom_line:
             return # abbys reached - pt1 check
 
 
 def solve(data, is_part_2=False):
     rocks = generate_cave(data)
-    bottom_line = max(rocks, key=lambda x:x.imag)
-    if is_part_2:
-        bottom_line += 0+2j
-
+    start = 500+0j
+    bottom_line = max(rocks, key=lambda x:x.imag).imag + 2*is_part_2
     sand = set()
     while True:
-        sand_particle = one_sand(rocks, sand, bottom_line, is_part_2)
-        if sand_particle:
+        if (sand_particle := one_sand(rocks, sand, bottom_line, start, is_part_2)):
             sand.add(sand_particle)
         else:
-            break
-        if is_part_2 and sand_particle == 500+0j:
-            break
-    
-    return len(sand)
+            return len(sand)
+        if is_part_2 and sand_particle == start:
+            return len(sand)
 
 
 
-party_1 = solve(data)
+party_1, party_2 = (solve(data, is_part_2) for is_part_2 in (False, True))
 
-party_2 = solve(data, True)
 print_solutions(party_1, party_2)
+
 
 
 def test_one():
