@@ -1,8 +1,8 @@
 
+from collections import deque
+
 from santas_little_helpers.helpers import *
 
-from collections import deque
-from queue import PriorityQueue
 DELTAS ={
     -1+0j, # left
      1+0j, # right
@@ -11,81 +11,73 @@ DELTAS ={
 }
 
 
-def get_neighbors(location, cave_floor, cave_heights):
-    return [candidate for candidate in get_four_neighbors(location) if candidate in cave_floor and cave_heights[candidate] <= cave_heights[location]+1]
+def get_neighbors(location, heightmap):
+    return (candidate for delta in DELTAS 
+            if (candidate:=location + delta) in heightmap
+                and heightmap[candidate] + 1 >= heightmap[location] )
 
 def get_path_length(came_from, start, end):
     current = end
     path = []
-
     while current != start:
+        if current not in came_from:
+            return
         path.append(current)
-        try:
-            current = came_from[current]
-        except:
-            return None
-
+        current = came_from[current]
     return len(path)
 
 
-def traverse_floor(cave_floor, cave_heights, start, end, min_length=None):
-    frontier = PriorityQueue()
-    frontier.put((0, start))
-    cost_so_far = dict()
-    cost_so_far[start] = ord('a')
-    came_from = {start: None}
-    while not frontier.empty():
-        _, current = frontier.get()
+def shortest_path(heightmap, end, start=None):
+    frontier = deque([end])
+    came_from = {end: None}
+    while frontier:
+        current = frontier.popleft()
 
-        if current == end:
-            return get_path_length(came_from, start, end)
+        if current == start:
+                return get_path_length(came_from, end, start)
+        if not start and heightmap[current] == ord('a'):
+                return get_path_length(came_from, end, current)
 
-
-        neighbors = get_neighbors(current, cave_floor, cave_heights)
-
-        for neighbor in neighbors:
-            #print(neighbor)
-            height = cave_heights[current]
-            new_cost = cost_so_far[current] + height
-            if neighbor not in cost_so_far or new_cost < cost_so_far[neighbor]: # and cave_heights[neighbor] <= current_height+1:
-                #print(f'curent {current}, neighbor: {neighbor}')
-                cost_so_far[neighbor] = new_cost
-                frontier.put((new_cost, neighbor))
-                #priority = current_height
+        for neighbor in get_neighbors(current, heightmap):
+            if neighbor not in came_from:
+                frontier.append(neighbor)
                 came_from[neighbor] = current
 
 
-    return get_path_length(came_from, start, end)
+def parse(lines):
+    heightmap = dict()
+    starting_positions = []
+    for row, line in enumerate(lines):
+        for col, elevation in enumerate(line):
+            position = complex(col, row)
+            match elevation:
+                case 'E':
+                    heightmap[position] = ord('z')
+                    END = position
+                case 'S':
+                    heightmap[position] = ord('a')
+                    START = position
+                case _:
+                    heightmap[position] = ord(elevation)
+    return heightmap, START, END
+
+
+heightmap, START, END = parse(get_input('inputs/12.txt'))
 
 
 
 
-lines = get_input('inputs/12.txt')
-#lines = get_input('inputs/12e.txt')
 
-cave_floor = []
-cave_heights = dict()
-for row, line in enumerate(lines):
-    for col, height in enumerate(line):
-        position = (col, row)
-        cave_floor.append(position)
-        if height == 'E':
-            cave_heights[position] = ord('z')
-            END = position
-        elif height == 'S':
-            cave_heights[position] = ord('a')
-            START = position
-        else:
-            cave_heights[position] = ord(height)
+party_1 = shortest_path(heightmap, END, START)
+party_2 = shortest_path(heightmap, END)
 
-party_1 = traverse_floor(cave_heights.keys(), cave_heights, START, END)
+print_solutions(party_1, party_2)
+quit()
 
-
-current_min = len(cave_heights)
-for pos, heig in cave_heights.items():
+current_min = len(heightmap)
+for pos, heig in heightmap.items():
     if heig == ord('a'):
-        #print(pos)
-        bla = traverse_floor(cave_heights.keys(), cave_heights, pos, END, current_min)
+        bla = shortest_path(heightmap, pos, END)
         if bla is not None:
             current_min = new_min if (new_min:=bla) < current_min else current_min
 
