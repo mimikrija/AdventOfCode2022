@@ -8,15 +8,13 @@ data = get_input('inputs/14.txt')
 def generate_cave(data):
     rocks = set()
     for line in data:
-        point_pairs = [tuple(map(int, pair.split(','))) for pair in line.split(' -> ')]
+        point_pairs = [complex(*tuple(map(int, pair.split(',')))) for pair in line.split(' -> ')]
         for first, second in zip(point_pairs, point_pairs[1:]):
-            # if not (first[0] == second[0] or first[1] == second[1]):
-            #     print(first, second, 'it is a diagonal')
-            horiz_delta = second[0] - first[0]
-            vert_delta = second[1] - first[1]
-            rocks |= {complex(first[0] + sign(horiz_delta)*x, first[1]) for x in range(sign(horiz_delta)*horiz_delta)}
-            rocks |= {complex(first[0], first[1]+sign(vert_delta)*y) for y in range(sign(vert_delta)*vert_delta)}
-            rocks.add(complex(*second))
+            delta = complex(sign((diff := second - first).real), sign(diff.imag))
+            current = first
+            while current != second + delta:
+                rocks.add(current)
+                current += delta
     return rocks
 
 
