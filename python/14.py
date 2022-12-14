@@ -2,7 +2,7 @@
 from santas_little_helpers.helpers import *
 
 data = get_input('inputs/14.txt')
-#data = get_input('inputs/14e.txt')
+
 sign = lambda x: 1 if x >= 0 else -1
 
 def generate_cave(data):
@@ -63,3 +63,9 @@ party_1 = solve(data)
 party_2 = solve(data, True)
 print_solutions(party_1, party_2)
 
+
+def test_one():
+    assert party_1 == 825
+
+def test_two():
+    assert party_2 == 26729
