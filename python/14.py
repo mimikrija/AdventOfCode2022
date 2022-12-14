@@ -24,41 +24,42 @@ def possible_directions(location):
     return [location + delta for delta in (0+1j, -1+1j, 1+1j)]
 
 
-def one_sand(rocks, sand, bottom_line, start=500+0j):
+def one_sand(rocks, sand, bottom_line, is_part_2=False, start=500+0j):
     current = start
     while True:
         candidates = [pos for pos in possible_directions(current) if pos not in sand and pos not in rocks]
         if len(candidates) == 0:
             return current # the particle stopped
-        
         else:
              current = candidates[0]
+        if is_part_2 and current.imag == bottom_line.imag-1:
+             return current
         if current.imag > bottom_line.imag:
-            return
+            return # abbys reached - pt1 check
 
 
-rocks = generate_cave(data)
+def solve(data, is_part_2=False):
+    rocks = generate_cave(data)
+    bottom_line = max(rocks, key=lambda x:x.imag)
+    if is_part_2:
+        bottom_line += 0+2j
 
-bottom_line = max(rocks, key=lambda x:x.imag) + 0+2j
-print(bottom_line)
-for x in range(3*int(-bottom_line.imag), 2*int(bottom_line.imag+1), 1):
-    rocks.add(bottom_line+complex(x, 0))
-
-
-sand = set()
-
-#sand.add(one_sand(rocks, sand, bottom_line+2))
-#party_1 = 0
-while True:
-    sand_particle = one_sand(rocks, sand, bottom_line)
-    if sand_particle:
-        sand.add(sand_particle)
-        if sand_particle == 500+0j:
+    sand = set()
+    while True:
+        sand_particle = one_sand(rocks, sand, bottom_line, is_part_2)
+        if sand_particle:
+            sand.add(sand_particle)
+        else:
             break
-    else:
-        break
+        if is_part_2 and sand_particle == 500+0j:
+            break
+    
+    return len(sand)
 
-party_1 = len(sand)
-print(party_1)
 
-# 14276 too low
+
+party_1 = solve(data)
+
+party_2 = solve(data, True)
+print_solutions(party_1, party_2)
+
