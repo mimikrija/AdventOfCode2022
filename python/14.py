@@ -21,19 +21,19 @@ def generate_cave(data):
 
 
 def possible_directions(location):
-    return [location + delta for delta in (0+1j, -1+1j, 1+1j)]
+    for delta in (0+1j, -1+1j, 1+1j):
+        yield location + delta
 
 
 def one_sand(rocks, sand, bottom_line, is_part_2=False, start=500+0j):
     current = start
     while True:
-        candidates = [pos for pos in possible_directions(current) if pos not in sand and pos not in rocks]
-        if len(candidates) == 0:
+        candidate = next((pos for pos in possible_directions(current) if pos not in sand and pos not in rocks), None)
+        if not candidate:
             return current # the particle stopped
-        else:
-             current = candidates[0]
+        current = candidate
         if is_part_2 and current.imag == bottom_line.imag-1:
-             return current
+             return current # bottom reached, add to sand
         if current.imag > bottom_line.imag:
             return # abbys reached - pt1 check
 
