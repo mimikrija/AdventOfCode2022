@@ -46,7 +46,6 @@ def shortest_path(heightmap, end, start=None):
 
 def parse(lines):
     heightmap = dict()
-    starting_positions = []
     for row, line in enumerate(lines):
         for col, elevation in enumerate(line):
             position = complex(col, row)
@@ -72,18 +71,7 @@ party_1 = shortest_path(heightmap, END, START)
 party_2 = shortest_path(heightmap, END)
 
 print_solutions(party_1, party_2)
-quit()
 
-current_min = len(heightmap)
-for pos, heig in heightmap.items():
-    if heig == ord('a'):
-        bla = shortest_path(heightmap, pos, END)
-        if bla is not None:
-            current_min = new_min if (new_min:=bla) < current_min else current_min
-
-party_2 = current_min
-
-print_solutions(party_1, party_2)
 
 
 def test_one():
