@@ -1,7 +1,7 @@
 from santas_little_helpers.helpers import *
 from re import findall
 from collections import defaultdict
-from itertools import permutations
+from itertools import permutations, combinations
 
 data = get_input('inputs/16.txt')
 data = get_input('inputs/16e.txt')
@@ -14,19 +14,23 @@ for line in data:
     first = valves[0]
     rest = valves[1:]
     flow = int(findall(r'\d+', line)[0])
-    connectivity[first] = valves
+    connectivity[first] = rest
     flows[first] = flow
 
-came_from = defaultdict(list)
-for valve, valves in connectivity.items():
-    for v in valves:
-        if v != valve: # why do i need this
-            came_from[v].append(valve)
 
-def max_pressure(flows, connectivity, m):
-    minutes = 0
-    max_pressure = 0
+
+distances = {p: 0 for p in permutations(connectivity.keys(), 2)}
+for p in distances.keys():
+    first, second = p
+    steps = 0
+    candidates = connectivity[first]
     while True:
-        for valve in permutations(connectivity.keys()):
-            
+        steps += 1
+        if second in candidates:
+            distances[p] = steps
+            break
+        else:
+            candidates = [c for candidate in candidates for c in connectivity[candidate]]
+
+
 
