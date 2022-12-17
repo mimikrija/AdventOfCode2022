@@ -4,12 +4,12 @@ from santas_little_helpers.helpers import *
 SHAPES = {
     '-': {n+0j for n in range(4)},
     '+': {n+1j for n in range(3)} | {complex(1, n) for n in range(3)},
-    'L': {complex(n, 2) for n in range(3)} | {complex(2, n) for n in range(3)},
+    'L': {complex(n, 0) for n in range(3)} | {complex(2, n) for n in range(3)},
     'I': {complex(0,n) for n in range(4)},
     'n': {complex(m,n) for m in range(2) for n in range(2)}
 }
 
-print(SHAPES['+'])
+
 DIRECTIONS = {
     '>': 1+0j, '<': -1+0j
 }
@@ -63,15 +63,15 @@ def play_tetris(num_of_rocks, hot_air, taken={n+0j for n in range(7)}):
                 taken |= set(previous)
                 break
         #print(highest_point(taken))
-    #print([t for t in taken if t.imag > 0])
+    #print(sorted([t for t in taken if t.imag > 0], key=lambda x: x.imag))
     #print(taken)
     return highest_point(taken)
 
 
 
 
-#data = get_input('inputs/17.txt')[0]
-data = get_input('inputs/17e.txt')[0]
+data = get_input('inputs/17.txt')[0]
+#data = get_input('inputs/17e.txt')[0]
 
 party_1 = play_tetris(2022, data)
-print(party_1)
+print_solutions(party_1)
