@@ -3,29 +3,38 @@ from santas_little_helpers.helpers import *
 
 SHAPES = {
     '-': {n+0j for n in range(4)},
-    '+': {n+1j for n in range(3)} | {complex(1, -n) for n in range(3)},
+    '+': {n+1j for n in range(3)} | {complex(1, n) for n in range(3)},
     'L': {complex(n, 2) for n in range(3)} | {complex(2, n) for n in range(3)},
     'I': {complex(0,n) for n in range(4)},
     'n': {complex(m,n) for m in range(2) for n in range(2)}
 }
 
+print(SHAPES['+'])
 DIRECTIONS = {
     '>': 1+0j, '<': -1+0j
 }
 
-DOWN = 0+1j
+DOWN = 0-1j
 
 def drop_shape():
-    sequence = ['-', '+', 'L', 'I' 'n']
+    sequence = ['-', '+', 'L', 'I', 'n']
     while True:
-        yield sequence[0], SHAPES[sequence[0]]
+        yield sequence[0]
         sequence = sequence[1:] + sequence[:1]
 
+def hot(data):
+    size = len(data)
+    n=0
+    while True:
+        yield data[n]
+        n += 1
+        if n==size:
+            n=0
 
 
 def initial_position(shape, high_point=0):
     # shift horizontally 1 step from the wall and 3 steps from the highest point
-    return [point+complex(1, high_point+3) for point in SHAPES[shape]]
+    return [point+complex(2, high_point+4) for point in SHAPES[shape]]
 
 def touched(shape, taken):
     return any(point in taken for point in shape)
@@ -35,23 +44,34 @@ def highest_point(taken):
 
 
 def play_tetris(num_of_rocks, hot_air, taken={n+0j for n in range(7)}):
-    hot_air = reversed(hot_air)
     drop = drop_shape()
+    hotm = hot(hot_air)
     for _ in range(num_of_rocks):
         height = highest_point(taken)
-        current_shape = initial_position(next(drop_shape), height)
+ #       print(height)
+        current_shape = initial_position(next(drop), height)
         while True:
-            for _ in range (2):
-                current_shape += DIRECTIONS[hot_air.pop()]
-                potential_shape = current_shape + DOWN
-            if potential_shape
-        
+            previous = current_shape
+            hot_move = next(hotm)
+            current_shape = {c + DIRECTIONS[hot_move] for c in current_shape}
+            
+            if any(c.real < 0 or c.real > 6 for c in current_shape) or touched(current_shape, taken):
+                current_shape = previous
+            previous = current_shape
+            current_shape = {c + DOWN for c in current_shape}
+            if touched(current_shape, taken):
+                taken |= set(previous)
+                break
+        #print(highest_point(taken))
+    #print([t for t in taken if t.imag > 0])
+    #print(taken)
+    return highest_point(taken)
 
 
-print(SHAPES)
 
 
-
-data = get_input('inputs/17.txt')[0]
+#data = get_input('inputs/17.txt')[0]
 data = get_input('inputs/17e.txt')[0]
-print(data)
+
+party_1 = play_tetris(2022, data)
+print(party_1)
