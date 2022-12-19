@@ -1,8 +1,8 @@
+# Day 17: Pyroclastic Flow
 
 from collections import defaultdict
 
 from santas_little_helpers.helpers import *
-
 
 MINUS = ['####']
 PLUS = ['.#.',
@@ -72,23 +72,23 @@ def drop_rocks(num_of_rocks, hot_air):
         
         # cycle detection
         if cycle_found:
-            delta_rocks, delta_height = (states[state][-1][pos] - states[state][-2][pos] for pos in (0, 1))
-            print(delta_rocks, delta_height, num_r, states[state])
-            first_occurence = states[state][0][0]
-            multiplier, rest = divmod(num_of_rocks-first_occurence-1, delta_rocks)
-            print(multiplier, rest)
-            final = states[state][0][1] + multiplier*delta_height
-            newh =  states[state][0][1]
-            print(final)
-            # find state with rest
-            for state, bla in states.items():
-                ir, _, _ = state
-                nr, h = bla[0]
-                if nr == first_occurence + rest :
-                    print(nr, h, newh, newh-h)
-                    addthis =  h-newh
-                    return final+addthis
+            # get data from the two repeating cycles
+            (num_rocks_first, height_first), (num_rocks_second, height_second) = (states[state][pos] for pos in (0, 1))
+            delta_rocks = num_rocks_second - num_rocks_first
+            delta_height = height_second - height_first
 
+            # we need to apply delta_height multiplier times
+            # then add the delta height corresponding to rest number of rocks
+            multiplier, rest = divmod(num_of_rocks-num_rocks_first-1, delta_rocks)
+
+
+            # find delta h corresponding to rest number of rocks:
+            for rest_state in states.values():
+                rest_num_rocks, rest_height = rest_state[0]
+                if rest_num_rocks == num_rocks_first + rest:
+                    return multiplier*delta_height + rest_height
+
+        # no cycle detected (yet) - increment rock number
         num_r += 1
 
     return highest_point(tower)
@@ -107,4 +107,4 @@ def test_one():
 
 
 def test_two():
-    assert party_1 == 1581449275319
+    assert party_2 == 1581449275319
