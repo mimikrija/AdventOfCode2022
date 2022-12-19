@@ -38,10 +38,12 @@ def highest_point(tower):
 def column_heights(tower):
     return (highest_point(c for c in tower if c[0] == x) for x in range(7))
 
-def drop_rocks(num_of_rocks, hot_air, tower={(x, 0) for x in range(7)}):
+def drop_rocks(num_of_rocks, hot_air):
+    tower={(x, 0) for x in range(7)}
     num_h = 0
     num_r = 0
     states = defaultdict(list)
+    cycle_found = False
     while num_r < num_of_rocks:
         # drop new rock so that its lowest point
         # is 3 cells above the tower's highest point
@@ -63,9 +65,30 @@ def drop_rocks(num_of_rocks, hot_air, tower={(x, 0) for x in range(7)}):
             if penetrating_floor((considered_rock:=move(last_possible_rock, 0, -1)), tower):
                 tower |= set(last_possible_rock)
                 tower_deltas = tuple(y-height for y in column_heights(tower))
-                states[(index_r, index_h, tower_deltas)].append(highest_point(tower))
+                state = (index_r, index_h, tower_deltas)
+                states[state].append((num_r, highest_point(tower)))
+                cycle_found = len(states[state]) == 2
                 break
         
+        # cycle detection
+        if cycle_found:
+            delta_rocks, delta_height = (states[state][-1][pos] - states[state][-2][pos] for pos in (0, 1))
+            print(delta_rocks, delta_height, num_r, states[state])
+            first_occurence = states[state][0][0]
+            multiplier, rest = divmod(num_of_rocks-first_occurence-1, delta_rocks)
+            print(multiplier, rest)
+            final = states[state][0][1] + multiplier*delta_height
+            newh =  states[state][0][1]
+            print(final)
+            # find state with rest
+            for state, bla in states.items():
+                ir, _, _ = state
+                nr, h = bla[0]
+                if nr == first_occurence + rest :
+                    print(nr, h, newh, newh-h)
+                    addthis =  h-newh
+                    return final+addthis
+
         num_r += 1
 
     return highest_point(tower)
@@ -74,10 +97,14 @@ def drop_rocks(num_of_rocks, hot_air, tower={(x, 0) for x in range(7)}):
 
 
 data = get_input('inputs/17.txt')[0]
-party_1 = drop_rocks(2022, data)
-print_solutions(party_1)
+party_1, party_2 = (drop_rocks(elephant_number, data) for elephant_number in (2022, 1000000000000))
+print_solutions(party_1, party_2)
 
 
 
 def test_one():
     assert party_1 == 3157
+
+
+def test_two():
+    assert party_1 == 1581449275319
