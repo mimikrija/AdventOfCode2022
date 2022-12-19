@@ -1,4 +1,6 @@
 
+from collections import defaultdict
+
 from santas_little_helpers.helpers import *
 
 
@@ -33,19 +35,23 @@ def penetrating_wall(shape):
 def highest_point(tower):
     return max(tower, key=lambda x:x[1])[1]
 
+def column_heights(tower):
+    return (highest_point(c for c in tower if c[0] == x) for x in range(7))
 
 def drop_rocks(num_of_rocks, hot_air, tower={(x, 0) for x in range(7)}):
     num_h = 0
-    for num_r in range(num_of_rocks):
+    num_r = 0
+    states = defaultdict(list)
+    while num_r < num_of_rocks:
         # drop new rock so that its lowest point
         # is 3 cells above the tower's highest point
         height = highest_point(tower)
-        considered_rock = move(SHAPES[num_r%len(SHAPES)], 0, height+4)
+        considered_rock = move(SHAPES[(index_r:=num_r%len(SHAPES))], 0, height+4)
         while True:
             # HORIZONTAL MOVE
             last_possible_rock = considered_rock
             # move rock horizontally...
-            dx = -1 + 2*(hot_air[num_h%len(hot_air)] == '>')
+            dx = -1 + 2*(hot_air[(index_h:=num_h%len(hot_air))] == '>')
             num_h += 1
             considered_rock = move(considered_rock, dx, 0)
             # ...revert it if it would result with any penetration!
@@ -56,7 +62,11 @@ def drop_rocks(num_of_rocks, hot_air, tower={(x, 0) for x in range(7)}):
             # if vertical move results in penetration, add last possible one to the tower
             if penetrating_floor((considered_rock:=move(last_possible_rock, 0, -1)), tower):
                 tower |= set(last_possible_rock)
+                tower_deltas = tuple(y-height for y in column_heights(tower))
+                states[(index_r, index_h, tower_deltas)].append(highest_point(tower))
                 break
+        
+        num_r += 1
 
     return highest_point(tower)
 
@@ -64,7 +74,6 @@ def drop_rocks(num_of_rocks, hot_air, tower={(x, 0) for x in range(7)}):
 
 
 data = get_input('inputs/17.txt')[0]
-
 party_1 = drop_rocks(2022, data)
 print_solutions(party_1)
 
