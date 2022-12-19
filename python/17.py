@@ -71,7 +71,13 @@ def play_tetris(num_of_rocks, hot_air, taken={n+0j for n in range(7)}):
 
 
 data = get_input('inputs/17.txt')[0]
-#data = get_input('inputs/17e.txt')[0]
 
 party_1 = play_tetris(2022, data)
 print_solutions(party_1)
+
+
+
+
+
+def test_one():
+    assert party_1 == 3157
