@@ -42,17 +42,19 @@ def drop_rocks(num_of_rocks, hot_air, tower={(x, 0) for x in range(7)}):
         height = highest_point(tower)
         considered_rock = move(SHAPES[num_r%len(SHAPES)], 0, height+4)
         while True:
+            # HORIZONTAL MOVE
             last_possible_rock = considered_rock
+            # move rock horizontally...
             dx = -1 + 2*(hot_air[num_h%len(hot_air)] == '>')
             num_h += 1
             considered_rock = move(considered_rock, dx, 0)
-            
-            # skip horizontal action if it would result with penetration
+            # ...revert it if it would result with any penetration!
             if penetrating_wall(considered_rock) or penetrating_floor(considered_rock, tower):
                 considered_rock = last_possible_rock
+            # DOWNWARD MOVE
             last_possible_rock = considered_rock
-            considered_rock = move(considered_rock, 0, -1)
-            if penetrating_floor(considered_rock, tower):
+            # if vertical move results in penetration, add last possible one to the tower
+            if penetrating_floor((considered_rock:=move(last_possible_rock, 0, -1)), tower):
                 tower |= set(last_possible_rock)
                 break
 
