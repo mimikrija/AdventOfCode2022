@@ -8,21 +8,15 @@ from santas_little_helpers.helpers import *
 data = get_input('inputs/20.txt', True, '\n')
 
 
-
 def mixit(in_list, orig):
     output = deque(in_list)
     for pair in orig:
-        while True:
-            current = output.popleft()
-            if current == pair:
-                break
-            output.append(current)
-
-        num, pos = current
+        pair_pos = output.index(pair)
+        output.rotate(-pair_pos)
+        current = output.popleft()
+        num, _ = current
         output.rotate(-num)
-        output.appendleft(current)
-        output.rotate()
-        #print([c for c, _ in output])
+        output.append(current)
     return output
 
 def get_numbers(linked, zero):
