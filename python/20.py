@@ -19,24 +19,25 @@ def mixit(in_list, orig):
         output.append(current)
     return output
 
-def get_numbers(linked, zero):
+def grove_coordinates(linked, zero):
+
     ref = linked.index(zero)
     positions = [(ref+1000*n)%(len(linked)) for n in range(1, 4)]
     return sum(linked[pos][0] for pos in positions)
 
 
+def solve(data, part_2=False):
+    decryption_key = 1 if not part_2 else 811589153
+    original = [(num*decryption_key, pos) for pos, num in enumerate(data)]
+    rounds = 1 if not part_2 else 10
+    coordinates = original
+    for _ in range(rounds):
+        coordinates = mixit(coordinates, original)
+    zero_pos = (0, data.index(0))
+    return grove_coordinates(coordinates, zero_pos)
 
-original = [(num, pos) for pos, num in enumerate(data)]
-p = original
-zero_pos = (0, data.index(0))
-p = mixit(p, original)
-party_1 = get_numbers(p, zero_pos)
 
-original = [(num*811589153, pos) for pos, num in enumerate(data)]
-p = original
-for round in range(10):
-    p = mixit(p, original)
-party_2 = get_numbers(p, zero_pos)
+party_1, party_2 = (solve(data, part_2) for part_2 in (False, True))
 
 
 print_solutions(party_1, party_2)
