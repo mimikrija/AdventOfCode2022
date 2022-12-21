@@ -1,8 +1,11 @@
-from santas_little_helpers.helpers import *
+# Day 20: Grove Positioning System
+
 from collections import deque
 
+from santas_little_helpers.helpers import *
+
+
 data = get_input('inputs/20.txt', True, '\n')
-original = [(num*811589153, pos) for pos, num in enumerate(data)]
 
 
 
@@ -23,19 +26,29 @@ def mixit(in_list, orig):
     return output
 
 def get_numbers(linked, zero):
-
     ref = linked.index(zero)
-
     positions = [(ref+1000*n)%(len(linked)) for n in range(1, 4)]
-    #print(positions)
-
     return sum(linked[pos][0] for pos in positions)
 
-#print(deque(original))
-p = original
-for _ in range(10):
-    p = mixit(p, original)
-    #print(p)
-    zero_pos = data.index(0)
-    print(get_numbers(p, (0, zero_pos)))
 
+
+original = [(num, pos) for pos, num in enumerate(data)]
+p = original
+zero_pos = (0, data.index(0))
+p = mixit(p, original)
+party_1 = get_numbers(p, zero_pos)
+
+original = [(num*811589153, pos) for pos, num in enumerate(data)]
+p = original
+for round in range(10):
+    p = mixit(p, original)
+party_2 = get_numbers(p, zero_pos)
+
+
+print_solutions(party_1, party_2)
+
+def test_one():
+    assert party_1 == 14888
+
+def test_two():
+    assert party_2 == 3760092545849
