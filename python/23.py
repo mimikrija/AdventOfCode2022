@@ -1,7 +1,7 @@
 from santas_little_helpers.helpers import *
 from collections import deque, defaultdict
 
-data = get_input('inputs/23e.txt')
+data = get_input('inputs/23.txt')
 
 open_space, elves = ({complex(x, y) for y, row in enumerate(data) for x, c in enumerate(row) if c == criterion}
                         for criterion in ('.', '#'))
@@ -13,23 +13,24 @@ directions = deque([
      [1-1j, 1+0j, 1+1j] # NE, E, SE
 ])
 
+eight_directions = set(dir for direction in directions for dir in direction)
+print(eight_directions)
 
 def play_round(elves, directions):
     proposals = defaultdict(list)
     for elf in elves:
+        if not any(elf + dir in elves for dir in eight_directions):
+            continue
         for direction in directions:
-            if not any((candidate := elf + dir) in elves for dir in direction):
-                proposals[candidate].append(elf)
+            if not any(elf + dir in elves for dir in direction):
+                proposals[elf+direction[1]].append(elf)
                 break
     for new_elf, old_elves in proposals.items():
         if len(old_elves) == 1:
-            # i need to add here that it does not move towards proposal but towards general direction
-            
             elves.remove(old_elves[0])
             elves.add(new_elf)
-    return elves
-    if len(proposals) == 0: # no possible moves
-        return elves
+    # no possible moves
+    return elves, len(proposals) == 0
 
 def get_elves_count_rectangle(elves):
     min_x = int(min(elves, key=lambda x: x.real).real)
@@ -45,9 +46,23 @@ def get_elves_count_rectangle(elves):
     return count
 
 
-for _ in range(10):
-    elves = play_round(elves, directions)
-    directions.rotate(-1)
+def solve(in_elves, is_part_2):
+    elves = set(in_elves)
+    rounds = 0
+    while True:
+        elves, stop = play_round(elves, directions)
+        directions.rotate(-1)
+        rounds += 1
+        if not is_part_2 and rounds == 10:
+            return get_elves_count_rectangle(elves)
+        elif stop:
+            return rounds, get_elves_count_rectangle(elves)
 
-print(get_elves_count_rectangle(elves))
+party_2 =solve(elves, True)
+print(party_2)
+
+
+party_1, party_2 = (solve(elves, pt2) for pt2 in (False, True))
+print_solutions(party_1, party_2)
+
 
