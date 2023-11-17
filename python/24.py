@@ -1,76 +1,69 @@
 from santas_little_helpers.helpers import *
-from math import lcm
-
+from collections import deque
 
 
 input_data = read_input(24)
 
 no_borders_map = [line[1:-1] for line in input_data[1:-1]]
-START = 0-1j
-LENGTH = len(no_borders_map[0])
-HEIGHT = len(no_borders_map)
-END = complex(LENGTH-1, HEIGHT)
+
+ROWS = no_borders_map
+COLUMNS = list(zip(*no_borders_map))
+
+MAX_X = len(COLUMNS)-1
+MAX_Y = len(ROWS)-1
+
+START = (0, -1)
+END = (MAX_X, MAX_Y+1)
+
+def no_blizzard(position, time):
+    if position == START or position == END:
+        return True
+    col, row = position
+    if not 0 <= col <= MAX_X:
+        return False
+    if not 0 <= row <= MAX_Y:
+        return False
+    which_way = lambda d: -1 if d in '>v' else 1
+    # check rows
+    line = ROWS[row]
+    
+    for blizzard in '><':
+        pos_to_check = (col + which_way(blizzard)*time) % len(line)
+        if line[pos_to_check] == blizzard:
+            return False
+
+    # check columns
+    line = COLUMNS[col]
+    for blizzard in '^v':
+        pos_to_check = (row + which_way(blizzard)*time) % len(line)
+        if line[pos_to_check] == blizzard:
+            return False
+    
+    return True
+
+def blizzard_first_search(start, end, start_time=0):
+    
+    frontier = deque([(start, start_time)])
+    reached = set((start, start_time))
+    while frontier:
+        current, time = frontier.popleft()
+        five_guys = {guy for guy in get_four_neighbors(current) | {current} if no_blizzard(guy, time+1)}
+
+        for pos in five_guys:
+            if pos == end:
+                return time+1
+            if (pos, time+1) not in reached:
+                frontier.append((pos, time+1))
+                reached.add((pos, time+1))
 
 
-print(lcm(LENGTH, HEIGHT))
+party_1 = blizzard_first_search(START, END)
+party_2 = blizzard_first_search(START, END, blizzard_first_search(END, START, party_1+1)+1)
 
-# initialize blizzards
-blizzards = {direction: [set()] for direction in '><^v'}
+print_solutions(party_1, party_2)
 
-for y, row in enumerate(no_borders_map):
-    for x, direction in enumerate(row):
-        if direction in '><^v':
-            blizzards[direction][0].add(complex(x, y))
+def test_one():
+    assert party_1 == 299
 
-#print (blizzards)
-
-
-MOVE = {
-    '>': 1+0j,
-    '<':-1+0j,
-    '^': 0-1j,
-    'v': 0+1j,
-}
-
-# blizzards = dict{direction: list of sets, list pos is the time}
-
-horiz_check = lambda x: LENGTH if x == '>' else -1
-x_start_from = lambda x: 0 if x == '>' else LENGTH - 1
-
-# update horizontal blizzards
-for time in range(1, LENGTH):
-    for direction in '><':
-        new_positions = set()
-        for pos in blizzards[direction][-1]:
-            newpos = pos + MOVE[direction]
-            if newpos.real == horiz_check(direction):
-                newpos = complex(x_start_from(direction), newpos.imag)
-            new_positions.add(newpos)
-        blizzards[direction].append(new_positions)
-
-
-vert_check = lambda x: HEIGHT if x == 'v' else -1
-y_start_from = lambda x: 0 if x == 'v' else HEIGHT - 1
-# update vertical blizzards
-for time in range(1, HEIGHT):
-    for direction in 'v^':
-        new_positions = set()
-        for pos in blizzards[direction][-1]:
-            newpos = pos + MOVE[direction]
-            if newpos.imag == vert_check(direction):
-                newpos = complex(newpos.real, y_start_from(direction))
-            new_positions.add(newpos)
-        blizzards[direction].append(new_positions)
-
-
-
-def get_positions(time):
-    hor_time = time % LENGTH
-    vert_time = time % HEIGHT
-    positions = blizzards['>'][hor_time] | blizzards['<'][hor_time] | blizzards['v'][vert_time] | blizzards['^'][vert_time]
-    return positions
-
-
-occupied_positions = {time: get_positions(time) for time in range(lcm(HEIGHT, LENGTH))}
-
-print(len(occupied_positions[lcm(HEIGHT, LENGTH)-1]))
+def test_two():
+    assert party_2 == 899
