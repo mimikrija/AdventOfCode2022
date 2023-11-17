@@ -40,20 +40,16 @@ def no_blizzard(position, time):
 
     return True
 
-def blizzard_first_search(start, end, start_time=0):
-    
-    frontier = deque([(start, start_time)])
-    reached = set((start, start_time))
-    while frontier:
-        current, time = frontier.popleft()
-        five_guys = {guy for guy in get_four_neighbors(current) | {current} if no_blizzard(guy, time+1)}
 
-        for pos in five_guys:
-            if pos == end:
-                return time+1
-            if (pos, time+1) not in reached:
-                frontier.append((pos, time+1))
-                reached.add((pos, time+1))
+def blizzard_first_search(start, end, start_time=0):
+    reached = {start}
+    time = start_time
+    while reached:
+        if end in reached:
+            return time
+        time += 1
+        reached = {guy for current in reached for guy in get_four_neighbors(current) | {current} if no_blizzard(guy, time)}
+
 
 
 party_1 = blizzard_first_search(START, END)
